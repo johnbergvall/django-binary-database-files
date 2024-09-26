@@ -1,7 +1,6 @@
-import os
-
 from django.conf import settings
 from django.urls import reverse
+from django.utils.encoding import filepath_to_uri
 
 # If true, when file objects are created, they will be automatically copied
 # to the local file system for faster serving.
@@ -14,7 +13,10 @@ def URL_METHOD_1(name):
     """
     Construct file URL based on media URL.
     """
-    return os.path.join(settings.MEDIA_URL, name)
+    base_url = settings.MEDIA_URL or ''
+    if not base_url.endswith("/"):
+        base_url += "/"
+    return base_url + filepath_to_uri(name.lstrip('/'))
 
 
 def URL_METHOD_2(name):
